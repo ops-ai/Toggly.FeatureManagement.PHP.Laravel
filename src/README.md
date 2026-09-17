@@ -8,34 +8,38 @@ Laravel integration for Toggly Feature Management.
 composer require toggly/laravel
 ```
 
+Package auto-discovery registers the service provider and `Toggly` facade.
+Manual `config/app.php` registration is only needed if auto-discovery is disabled.
+
+## Supported hosts
+
+The package retains its Laravel 8.0+ integration floor and PHP 7.4 package
+floor. Laravel 8/9 applications continue to use the existing setup.
+Current packed-package host coverage uses Laravel 10.3.3, 11.6.1, 12.12.2,
+and 13.10.1. Laravel 12 supports PHP 8.2–8.5; Laravel 13 requires PHP 8.3
+or later. Provide PSR-18 client and request-factory bindings in the Laravel
+container before resolving `FeatureManager`, as shown in the configuration
+examples below.
+
 ## Configuration
 
-1. **Register the service provider** in `config/app.php`:
-
-```php
-'providers' => [
-    // ...
-    Toggly\Laravel\ServiceProvider::class,
-],
-```
-
-2. **Publish the configuration**:
+1. **Publish the configuration**:
 
 ```bash
 php artisan vendor:publish --tag=toggly-config
 ```
 
-3. **Configure** in `.env`:
+2. **Configure** in `.env`:
 
 ```env
 TOGGLY_APP_KEY=your-app-key
 TOGGLY_ENVIRONMENT=Production
 TOGGLY_USE_SIGNED_DEFINITIONS=false
 TOGGLY_SNAPSHOT_PROVIDER=cache
-TOGGLY_CACHE_STORE=default
+# Optional: omit TOGGLY_CACHE_STORE to use Laravel's default cache store
 ```
 
-4. **Register middleware** in `app/Http/Kernel.php`:
+3. **Register middleware** in `bootstrap/app.php` (Laravel 11+) or `app/Http/Kernel.php`:
 
 ```php
 protected $routeMiddleware = [
